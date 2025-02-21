@@ -33,13 +33,15 @@
     </label>
   </form>
   <div class='top-menu'>
+    <button id="copy-pyramid">Copy</button>
+    <label class='filter-full'>Crates?</label><input type="checkbox" id="crated" name="Crates"/></label>
+    <button class="add-pyramid">Add</button>
     <button class="reset-pyramid">Reset</button>
     <label class='filter-full'>Filter<input name='filter-full' type='checkbox'></label>
     <select name='definition'>
       <option disabled>Pyramids</option>
       <option value='fmat'>FMAT</option>
       <option value='fmatBasic'>FMAT Basic</option>
-      <option value='test'>Frig</option>
       <option value='rares'>Rares</option>
       <option value='frig'>Frigate</option>
       <option value='frigmin'>Frigate Min</option>
@@ -48,16 +50,21 @@
       <option value='stock'>Stock</option>
       <option value='gunboat'>Gunboats</option>
       <option value='qrf'>QRF</option>
+      <option value='lh'>LH</option>
+      <option value='lh2'>LH min</option>
+      <option value='lh3'>LH avg</option>
+      <option value='test2'>Copy</option>
     </select>
     <select name='format'>
       <option disabled>Metric Format</option>
-      <option value='crates'>Crates Required</option>
       <option value='required'>Items Required</option>
+      <option value='crates'>Crates Required</option>
       <option value='current'>Current Items</option>
       <option value='current-desired'>Current / Desired</option>
     </select>
   </div>
   <div class='processing-status'>Processed: <span>0 of 0</span></div>
+  <div id="addpyramid"></div>
   <div id="pyramid"></div>
   <div id="pyramid-footnote">
     <div class='color-legend'>
@@ -95,6 +102,9 @@
         background: black;
         color: white;
         font-family: sans-serif;
+    }
+    input{
+      display: inline;
     }
     .upload-screenshot{
         max-width: 250px;
@@ -137,12 +147,96 @@
       margin-bottom: 8px;
     }
     #pyramid .item {
-        margin-right: 4px;
-        overflow: hidden;
-        height: 42px;
-        padding: 2px;
-        transition: all 0.2s ease-in-out;
+      margin-right: 4px;
+      overflow: hidden;
+      height: 42px;
+      padding: 2px;
+      transition: all 0.2s ease-in-out;
     }
+    #addpyramid {
+      display: grid;
+      align-items: center;
+      font-family: Courier, monospace;
+      width: 60%;
+      margin-left: 20%;
+    }
+    #addpyramid .col {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #addpyramid .item {
+      display: flex;
+      margin-right: 4px;
+      margin-bottom: 2px;
+      /* overflow: hidden; */
+      height: 42px;
+      padding: 2px;
+      transition: all 0.2s ease-in-out;
+      background-color:#191919; 
+      position: relative;
+    }
+    #addpyramid > div span{
+        line-height: 34px;
+        padding: 8px;
+        min-width: 20px;
+        display: inline-block;
+        text-align: center;
+        /* font-weight: bold; */
+    }
+    .active{ background-color:#333; }
+    #addpyramid .item .itemtooltip{ 
+      visibility: hidden;
+      /* width: 120px; */
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 4px;
+      line-height: 18px;
+      font-family: sans-serif;
+      /* font-size: 8px; */
+      /* padding: 5px 0; */
+      /* border-radius: 6px; */
+
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -60px;
+    }
+    #addpyramid .item .itemtooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+    #addpyramid .item:hover .itemtooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    #addpyramid .item:hover{ background-color:#333; }
+
+    .categBut, .addrow{ 
+      align-self: stretch;
+      border: none;
+      background-color:#191919; 
+      color: white;
+    }
+    .categBut:hover{ background-color:#333; }
+    .selectrow{
+      align-self: stretch;
+      border: none;
+      background-color:#191919; 
+      color: white;
+    }
+    .selectrow:hover{ background-color:#333; }
     
     #pyramid .depleted{ background-color:darkred; }
     #pyramid .depleted:hover{ background-color:red; }

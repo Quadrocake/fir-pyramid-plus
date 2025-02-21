@@ -1,4 +1,5 @@
 import Screenshot from './screenshot.mjs'
+import pyramidDefs from './trees.mjs';
 import { copyDefs } from './dk.mjs'
 
 let res = {};
@@ -8,6 +9,8 @@ let QUANTITY_MODEL_URL = "";
 let stockpiles = [];
 let imagesProcessed = 0;
 let imagesTotal = 0;
+
+let openedPanel = null;
 
 export async function init(resources, icon_model_url, quantity_model_url) {
   res = resources;
@@ -34,6 +37,17 @@ export async function init(resources, icon_model_url, quantity_model_url) {
     imagesProcessed = 0;
     imagesTotal = 0;
     document.querySelector('.render').innerHTML = '';
+    outputTotals();
+  });
+  // Add stockpile
+  document.querySelector('.add-pyramid').addEventListener('click', () => {
+    stockpiles = [];
+    imagesProcessed = 0;
+    imagesTotal = 0;
+    document.querySelector('.render').innerHTML = '';
+    addPyramid();
+  });
+  document.getElementById("crated").addEventListener('change', () => {
     outputTotals();
   });
   // 82DK Stockpile tracking
@@ -386,7 +400,7 @@ function getProcessImage(label, lastModified) {
 
     const stockpile = await Screenshot.process(canvas, ICON_MODEL_URL, res.ICON_CLASS_NAMES, QUANTITY_MODEL_URL, res.QUANTITY_CLASS_NAMES);
     if (stockpile) {
-      document.querySelector('div.render span').remove();
+      // document.querySelector('div.render span').remove();
       this.src = stockpile.box.canvas.toDataURL();
       stockpile.lastModified = lastModified;
       stockpiles.push(stockpile);
@@ -439,17 +453,114 @@ function getProcessImage(label, lastModified) {
   }
 }
 
+function addPyramid() {
+  const addpyramid = document.querySelector('div#addpyramid');
+  addpyramid.innerHTML = '';
+  console.log(res.CATALOG);
+  const addRowButton = document.createElement('button');
+  addRowButton.classList.add('addrow');
+  addRowButton.textContent = 'Add row'
+  addRowButton.addEventListener('click', () => {
+    pyramidDefs.test2.push([]);
+    outputTotals();
+  });
+
+  var copyPyramid = document.getElementById("copy-pyramid");
+  copyPyramid.addEventListener('click', () => {
+    navigator.clipboard.writeText(JSON.stringify(pyramidDefs.test2));
+  });
+
+  const selFaction = 'Wardens'
+  const categories = ['SmallArms', 'HeavyArms', 'HeavyAmmo', 'Utility', 'Medical', 'Supplies', 'Uniforms'];
+  categories.forEach((selcategory) => {
+    const colDiv = document.createElement('div');
+    colDiv.classList.add('col'); //change later
+    colDiv.setAttribute("id", selcategory);
+    colDiv.style.display = "none";
+    const categoryButton = document.createElement('button');
+    categoryButton.classList.add(selcategory);
+    categoryButton.classList.add('categBut');
+    categoryButton.innerHTML = selcategory;
+    categoryButton.addEventListener('click', () => {
+      if (document.getElementById(selcategory).style.display !== "none") {
+        // document.querySelector(`div.${selcategory}`).display = "none";
+        console.log(colDiv.display, colDiv);
+        colDiv.style.display = "none";
+      } else {
+        // document.querySelector(`div.${selcategory}`).display = "inline-block";
+        console.log(colDiv.style.display);
+        colDiv.style.display = "flex";
+      }
+    });
+    addpyramid.appendChild(categoryButton);
+    for (const catalogItem of res.CATALOG) {
+      const itemCategory = (catalogItem.ItemCategory || '').replace(/^EItemCategory::/, '');
+      const vehicleCategory = catalogItem.VehicleProfileType ? 'Vehicles' : undefined;
+      const structureCategory = catalogItem.BuildLocationType
+          || (catalogItem.ProfileType == 'EStructureProfileType::Shippable') ? 'Structures' : undefined;
+
+      const itemFaction = (catalogItem.FactionVariant || '').replace(/^EFactionId::/, '');
+      const itemName = catalogItem.DisplayName;
+  
+      const category = itemCategory || vehicleCategory || structureCategory;
+      if (category == selcategory && (itemFaction == selFaction || itemFaction =='')) {
+        const itemDiv = document.createElement('div');
+        itemDiv.addEventListener("click", function(){
+          // pyramidDefs[0].push([catalogItem.CodeName, "100"])
+          console.log(catalogItem);
+          const activeRow = document.querySelector(".active");
+          if (activeRow){
+            // console.log(activeRow, activeRow.dataset);
+            pyramidDefs.test2[activeRow.dataset.rowindex].push([catalogItem.CodeName, "100"]);
+          } else {
+            pyramidDefs.test2[pyramidDefs.test2.length-1].push([catalogItem.CodeName, "100"]);
+          }
+          outputTotals();
+        });
+        itemDiv.classList.add('item');
+        // console.log(category)
+        itemDiv.classList.add(category);
+        const itemTooltip = document.createElement('span');
+        itemTooltip.innerHTML = itemName;
+        itemTooltip.classList.add('itemtooltip');
+        itemDiv.appendChild(itemTooltip);
+  
+        const fallbackImg = document.createElement('img');
+        fallbackImg.src = `./foxhole/infantry-59/icons/${catalogItem.CodeName}.png`;
+        fallbackImg.width = 42;
+        fallbackImg.height = 42;
+        fallbackImg.alt = catalogItem.DisplayName;
+        itemDiv.appendChild(fallbackImg);
+  
+        const labelSpan = document.createElement('span');
+        labelSpan.textContent = "+";
+        itemDiv.appendChild(labelSpan);
+  
+        itemDiv.classList.add('full'); //test
+        
+        colDiv.appendChild(itemDiv);
+      }
+    }
+    addpyramid.appendChild(colDiv);
+    addpyramid.appendChild(addRowButton);
+  });
+  // const selCategory = 'Uniforms'
+}
+
 function outputTotals() {
   const totals = {};
   const categories = {};
+  let countDiff = false;
 
-  for (const stockpile of stockpiles) {
+  if (stockpiles.length == 2){countDiff = true};
+  // for (const stockpile of stockpiles) {
+  for (const [i, stockpile] of stockpiles.entries()) {
     for (const element of stockpile.contents) {
       let key = element.CodeName;
       if (element.isCrated) {
         key += '-crated';
       }
-
+      // console.log(totals);
       if (!totals[key]) {
         const catalogItem = res.CATALOG.find(e=>e.CodeName == element.CodeName);
         if (!catalogItem) {
@@ -475,7 +586,15 @@ function outputTotals() {
           collection: [],
         };
       }
-      totals[key].total += element.quantity;
+      // totals[key].total += element.quantity; //sum changed to difference
+      if (i == 0 && countDiff == true) {
+        totals[key].total = element.quantity;
+      } else if (i == 1 && countDiff == true) {
+        console.log(key, totals[key].total, element.quantity);
+        totals[key].total -= element.quantity;
+      } else {
+        totals[key].total += element.quantity;
+      }
       totals[key].collection.push(element);
     }
   }
@@ -505,100 +624,74 @@ function outputTotals() {
   } else {
     pyramid.classList.remove('empty');
   }
-
-  const pyramidDefs = {}
-  pyramidDefs.fmat = [
-    [['SoldierSupplies', 200], ['Cloth', 1500]],
-    [['RifleLightW,RifleW', 100], ['RifleAmmo', 200], ['Bandages', 200]],
-    [['ATGrenadeW,StickyBomb', 60], ['GreenAsh', 100], ['FirstAidKit', 30], ['TraumaKit', 30], ['BloodPlasma', 150], ['MedicUniformW', 30]],
-    [['HEGrenade', 80], ['GasMask', 60], ['GasMaskFilter', 100], ['SMGW', 60], ['SMGAmmo', 160], ['GrenadeW', 80], ['WorkWrench', 20], ['SnowUniformW', 20]],
-    [['RpgW,RPGTW', 15], ['RpgAmmo', 75], ['ATRPGW,ATRifleW', 15], ['ATRPGIndirectAmmo,ATRifleAmmo', 60], ['Tripod', 20], ['Shovel', 20], ['AmmoUniformW', 30]],
-    [['MGW,MGTW', 10], ['MGAmmo', 60], ['RifleLongW', 30], ['Bayonet', 60], ['GrenadeAdapter', 20], ['Radio', 25], ['Binoculars', 20], ['ATAmmo', 60]],
-    [['Mortar', 15], ['MortarAmmo', 100], ['MortarAmmoFL', 100], ['MortarAmmoSH', 50], ['ATRPGTW', 10], ['LightTankAmmo', 100], ['TankUniformW', 30]],
-    [['AssaultRifleW', 30], ['AssaultRifleAmmo', 80], ['TankMine', 50], ['BarbedWireMaterials', 40], ['SandbagMaterials',  40],  ['SatchelChargeW', 40], ['SmokeGrenade', 40], ['ScoutUniformW', 15]],
-  ];
-  pyramidDefs.fmatBasic = [
-    [['SoldierSupplies', 100], ['Cloth', 1000]],
-    [['RifleW', 60], ['RifleAmmo', 120], ['Bandages', 100]],
-    [['StickyBomb', 30], ['GreenAsh', 40], ['FirstAidKit', 10], ['TraumaKit', 10], ['BloodPlasma', 50], ['MedicUniformW', 15]],
-    [['HEGrenade', 40], ['GasMask', 20], ['GasMaskFilter', 40], ['SMGW', 20], ['SMGAmmo', 80], ['GrenadeW', 40], ['WorkWrench', 10]],
-  ];
-  pyramidDefs.test = [
-    [['SoldierSupplies-crated', 50], ['Cloth-crated', 60]],
-    [['LightArtilleryAmmo-crated', 100], ['WaterMine-crated', 40], ['DepthChargeAmmo-crated', 40], ['ATAmmo-crated', 10]],
-    [['Radio-crated', 20], ['Binoculars-crated', 10]],
-  ];
-  pyramidDefs.rares = [
-    [['RareMetal', 1], ['FacilityMaterials9', 1]],
-  ];
-  pyramidDefs.frig = [
-    [['SoldierSupplies-crated', 50], ['Cloth-crated', 100]],
-    [['LightArtilleryAmmo-crated', 100], ['WaterMine-crated', 50], ['DepthChargeAmmo-crated', 50], ['ATAmmo-crated', 10], ['MetalBeamMaterials-crated', 50]],
-    [['Radio-crated', 60], ['Binoculars-crated', 30], ['WorkWrench-crated', 20], ['GasMask-crated', 30], ['GasMaskFilter-crated', 30], ['WaterBucket-crated', 30]],
-    [['TankUniformW-crated', 20], ['EngineerUniformW-crated', 20], ['AmmoUniformW-crated', 20], ['OfficerUniformW-crated', 20]],
-  ];
-  pyramidDefs.frigmin = [
-    [['SoldierSupplies-crated', 50], ['Cloth-crated', 80]],
-    [['LightArtilleryAmmo-crated', 100], ['WaterMine-crated', 20], ['DepthChargeAmmo-crated', 20], ['ATAmmo-crated', 10], ['MetalBeamMaterials-crated', 50]],
-    [['Radio-crated', 25], ['Binoculars-crated', 10], ['WorkWrench-crated', 10], ['GasMask-crated', 10], ['GasMaskFilter-crated', 20], ['WaterBucket-crated', 20]],
-    [['TankUniformW-crated', 10], ['EngineerUniformW-crated', 10], ['AmmoUniformW-crated', 5], ['OfficerUniformW-crated', 3]],
-  ];
-  pyramidDefs.bs = [
-    [['SoldierSupplies-crated', 80], ['Cloth-crated', 150]],
-    [['LightArtilleryAmmo-crated', 100], ['HeavyArtilleryAmmo-crated', 100], ['MiniTankAmmo-crated', 15]],
-    [['Radio-crated', 60], ['Binoculars-crated', 30], ['WorkWrench-crated', 20], ['GasMask-crated', 20], ['GasMaskFilter-crated', 30], ['WaterBucket-crated', 30]],
-    [['TankUniformW-crated', 30], ['EngineerUniformW-crated', 30], ['AmmoUniformW-crated', 20], ['OfficerUniformW-crated', 20]],
-  ];
-  pyramidDefs.bb = [
-    [['SoldierSupplies', 300], ['Cloth', 3000]],
-    [['RifleLightW,RifleW', 100], ['RifleAmmo', 200], ['RifleLongW', 40], ['SMGW', 60], ['SMGAmmo', 160]], //infantry
-    [['Bandages', 200], ['FirstAidKit', 30], ['BloodPlasma', 150], ['TraumaKit', 30], ['MedicUniformW', 30]], //medic
-    [['GrenadeW', 80], ['GreenAsh', 40], ['SmokeGrenade', 40], ['ATLaunchedGrenadeW', 40], ['GrenadeAdapter', 40]], //grenade
-    [['StickyBomb', 60], ['ATGrenadeW', 60], ['ATRifleW', 20], ['ATRifleAmmo', 60], ['ATRPGW', 15], ['ATRPGIndirectAmmo', 60], ['TankMine', 50]], //AT
-    [['HEGrenade', 100], ['RpgW', 30], ['RpgAmmo', 100], ['SatchelChargeW', 50], ['SatchelChargeT', 20], ['ExplosiveTripod', 20], ['AmmoUniformW', 40]], //PVE
-    [['Radio', 60], ['Binoculars', 20], ['WorkWrench', 20], ['ScoutUniformW', 15]], //Utility
-    [['Shovel', 20], ['BarbedWireMaterials', 40], ['SandbagMaterials',  40], ['EngineerUniformW', 15]], //Building
-    [['GasMask', 60], ['GasMaskFilter', 120], ['MGAmmo', 40], ['AssaultRifleAmmo', 60], ['MiniTankAmmo', 80], ['ATAmmo', 60], ['LightTankAmmo', 80], ['TankUniformW', 30]], //Tankers
-    [['RPGTW', 15], ['MGTW', 15], ['ATRPGTW', 15], ['Tripod', 30]], //Tripod
-    [['Mortar', 15], ['MortarAmmo', 60], ['MortarAmmoFL', 60], ['MortarAmmoFlame', 60], ['MortarAmmoSH', 50]], //Mortar
-    [['FlameTorchW', 15], ['FlameBackpackW', 30], ['PistolLightW', 40], ['Bayonet', 40], ['MaceW', 40], ['ArmourUniformW', 15]], //Larp
-    [['MGW', 30],['AssaultRifleW', 40], ['AssaultRifleHeavyW', 40], ['RifleShortW', 40], ['RifleHeavyW', 40], ['RevolverAmmo', 120], ['SniperRifleW', 15]], //Infantry 2
-  ];
-  pyramidDefs.stock = [
-    [['SoldierSupplies-crated', 100], ['Cloth-crated', 150]],
-    [['RifleLightW-crated,RifleW-crated', 40], ['RifleAmmo-crated', 40], ['RifleLongW-crated', 10], ['SMGW-crated', 20], ['SMGAmmo-crated', 20]], //infantry
-    [['Bandages-crated', 20], ['FirstAidKit-crated', 10], ['BloodPlasma-crated', 10], ['TraumaKit-crated', 10], ['MedicUniformW-crated', 15]], //medic
-    [['HEGrenade-crated', 50], ['StickyBomb-crated', 30], ['GrenadeW-crated', 20]],
-    [['Radio-crated', 30], ['Binoculars-crated', 20], ['WorkWrench-crated', 20]],
-    [['MortarAmmo-crated', 100], ['RpgAmmo-crated', 100]],
-  ];
-  pyramidDefs.gunboat = [
-    [['MortarAmmo-crated', 100], ['MortarAmmoFlame-crated', 100]],
-    [['RPGTW-crated', 20], ['RpgAmmo-crated', 100], ['ATRPGW-crated', 10], ['ATRPGIndirectAmmo-crated', 30]], //infantry
-    [['TankUniformW-crated', 20], ['AmmoUniformW-crated', 20], ['ScoutUniformW-crated', 20]], //medic
-    [['GasMask-crated', 20], ['GasMaskFilter-crated', 30], ['Binoculars-crated', 20], ['Radio-crated', 30]],
-  ];
-  pyramidDefs.qrf = [
-    [['SoldierSupplies', 100], ['Cloth', 1000]],
-    [['RifleLightW,RifleW', 60], ['RifleAmmo', 120], ['SMGW', 40], ['SMGAmmo', 80], ['Bandages', 100]],
-    [['StickyBomb', 50], ['HEGrenade', 40],  ['FirstAidKit', 10], ['TraumaKit', 10], ['BloodPlasma', 50], ['MedicUniformW', 15]],
-    [['Radio', 40], ['Binoculars', 30], ['WorkWrench', 20]],
-  ];
   
   const pyramidDef = pyramidDefs[definition];
-
+  const cratesTrue = document.getElementById("crated");
+  if (cratesTrue.checked == true){
+    pyramidDef.forEach((row, index) =>{
+      row.forEach((item, index2) => {
+        const itemSet = [];
+        if (!item[0].includes("-crated")) {
+          pyramidDef[index][index2][0].split(',').forEach((item) => {
+            itemSet.push(item + "-crated");
+          })
+        } else {
+          itemSet.push(item[0]);
+        }
+        pyramidDef[index][index2][0] = itemSet.join();
+      });
+    });
+  } else {
+    pyramidDef.forEach((row, index) =>{
+      row.forEach((item, index2) => {
+        if (item[0].includes("-crated")) {
+          pyramidDef[index][index2][0] = pyramidDef[index][index2][0].replaceAll('-crated', '');
+          // console.log(pyramidDef[index][index2][0]);
+        }
+      })
+    })
+  }
+  // if (cratesTrue.checked == true){
+  //   if (!itemName.includes("-crated")) {
+  //     const itemSet = [];
+  //     pyramidDef[index][index2][0].split(',').forEach((item) => {
+  //       itemSet.push(item + "-crated");
+  //       // pyramidDef[index][index2][0] += item + "-crated,";
+  //       // console.log(pyramidDef[index][index2][0]);
+  //     });
+  //     pyramidDef[index][index2][0] = itemSet.join();
+  //     console.log(pyramidDef[index][index2][0]);
+  //     // console.log(pyramidDef[index][index2][0].split(','));
+  //     // pyramidDef[index][index2][0] += "-crated";
+  //   }
+  // } else {
+  //   if (itemName.includes("-crated")) {
+  //     pyramidDef[index][index2][0].replaceAll('-crated', '');
+  //     // pyramidDef[index][index2][0].replace('-crated', '');
+  //     console.log(pyramidDef[index][index2][0].split(','));
+  //   }
+  // }
+  
   // console.log(totals);
-
-  pyramidDef.map(row => {
+  // console.log(pyramidDef);
+  pyramidDef.map((row, index) => {
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('row');
+    rowDiv.setAttribute('data-rowindex', index);
+    if (openedPanel && (openedPanel.dataset.rowindex == index)){
+      rowDiv.classList.add('active');
+    }
 
-    row.map(([CodeNames, desired]) => {
+    row.map(([CodeNames, desired], index2) => {
       // Items (including groups of items)
       let desiredCrates = desired;
       const itemNames = CodeNames.split(',');
       const itemDiv = document.createElement('div');
       itemDiv.classList.add('item');
+      itemDiv.setAttribute('data-codename', itemNames[0]);
+      // const removeItemButton = document.createElement('button');
+      // removeItemButton.addEventListener('click', (event) => removeItem(event, pyramidDef));
+      // itemDiv.appendChild(removeItemButton);
 
       let total = 0;
       let totalCrates = 0;
@@ -636,11 +729,16 @@ function outputTotals() {
           fallbackImg.width = 42;
           fallbackImg.height = 42;
           fallbackImg.alt = item.name;
+          fallbackImg.addEventListener('click', (event) => removeItem(event, pyramidDef));
           itemDiv.appendChild(fallbackImg);
         }
       }
       // Finish Icon Grouping
       const labelSpan = document.createElement('span');
+      if (stockpiles.length == 2) { //comparing two inventories
+        total = 0 - total;
+        // console.log(itemDiv.title, total);
+      }
       if(format === 'required'){
         labelSpan.textContent = `${desired - total}`;
       } else if(format === 'crates'){
@@ -652,21 +750,59 @@ function outputTotals() {
       } else {
         labelSpan.textContent = `${total} / ${desired}`;
       }
+      labelSpan.addEventListener('click', () => {
+        // document.querySelector('select[name=format]').value = 'required';
+        labelSpan.setAttribute('contentEditable', true);
+      });
+      labelSpan.addEventListener("focusout", (event) => {
+        let item = event.currentTarget.parentElement;
+        let userInput = item.dataset.codename;
+        pyramidDef.forEach((row) => {
+          row.forEach((item, index, object) => {
+            if (item.includes(userInput)){
+              // console.log(object[index][1], labelSpan.innerText);
+              object[index][1] = labelSpan.innerText;
+            }
+          });
+        })
+        labelSpan.blur();
+      });
       itemDiv.appendChild(labelSpan);
       itemDiv.title = itemDiv.title.trim().slice(0, -2).trim();
 
       // Status
-      if(total < desired / 4) {
-        itemDiv.classList.add('depleted');
-      } else if (total < desired / 2) {
-        itemDiv.classList.add('low');
-      } else if (total < desired) {
-        itemDiv.classList.add('medium');
+      if (stockpiles.length != 2) { //comparing two inventories
+        if(total < desired / 4) {
+          itemDiv.classList.add('depleted');
+        } else if (total < desired / 2) {
+          itemDiv.classList.add('low');
+        } else if (total < desired) {
+          itemDiv.classList.add('medium');
+        } else {
+          itemDiv.classList.add('full');
+        }
       } else {
-        itemDiv.classList.add('full');
+        document.getElementById("pyramid").classList.add('empty');
       }
       rowDiv.appendChild(itemDiv);
     });
+    const selectButton = document.createElement('button');
+    selectButton.classList.add('selectrow');
+    selectButton.textContent = '|'
+    selectButton.addEventListener("click", function(){
+      // const panels = document.querySelectorAll('.row');
+      if (openedPanel){
+        // console.log(openedPanel, openedPanel.classList);
+        const activePanels = document.querySelectorAll(".active");
+        activePanels.forEach((row) => {
+          row.classList.remove("active")
+        })
+        // openedPanel.classList.remove('active');
+      }
+      this.parentElement.classList.add('active');
+      openedPanel = this.parentElement; 
+    });
+    rowDiv.appendChild(selectButton);
     pyramid.appendChild(rowDiv);
   });
   // Pyramid  end
@@ -723,6 +859,22 @@ function outputTotals() {
       report.appendChild(cell);
     }
   }
+}
+
+const removeItem = (event, pyramidDef) => {
+  let item = event.currentTarget.parentElement;
+  let userInput = item.dataset.codename;
+  // console.log(event.currentTarget, userInput);
+  item.remove();
+  pyramidDef.forEach((row) => {
+    row.forEach((item, index, object) => {
+      if (item.includes(userInput)){
+        // console.log(item, object);
+        object.splice(index,1);
+      }
+    });
+  })
+  // pyramidDef.splice(itemIndex, 1);
 }
 
 export function getStockpiles() {
