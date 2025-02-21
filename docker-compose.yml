@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  opcomp-front:
+    image: fir-pyramid-plus:latest
+    ports:
+      - 5003:80
