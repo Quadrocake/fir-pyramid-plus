@@ -21,7 +21,7 @@ pyramidDefs.rares = [
 pyramidDefs.frig = [
   [['SoldierSupplies-crated', 50], ['Cloth-crated', 100]],
   [['LightArtilleryAmmo-crated', 100], ['WaterMine-crated', 50], ['DepthChargeAmmo-crated', 50], ['ATAmmo-crated', 10], ['MGAmmo-crated', 5], ['MetalBeamMaterials-crated', 100]],
-  [['Radio-crated', 60], ['Binoculars-crated', 30], ['WorkWrench-crated', 20], ['GasMask-crated', 30], ['GasMaskFilter-crated', 30], ['WaterBucket-crated', 30]],
+  [['Radio-crated', 60], ['Binoculars-crated', 30], ['WorkWrench-crated', 20], ['GasMask-crated', 20], ['GasMaskFilter-crated', 30], ['WaterBucket-crated', 30]],
   [['TankUniformW-crated', 20], ['EngineerUniformW-crated', 20], ['AmmoUniformW-crated', 20], ['OfficerUniformW-crated', 20]],
 ];
 pyramidDefs.frigmin = [
@@ -85,16 +85,15 @@ pyramidDefs.lh = [[["SoldierSupplies","2000"],["Cloth","10000"],["MetalBeamMater
 [["FlameTorchW","50"],["FlameBackpackW","100"],["AssaultRifleHeavyW,AssaultRifleW","150"],["AssaultRifleAmmo","300"]],
 [["Revolver","100"],["RifleHeavyW","200"],["RevolverAmmo","400"],["RifleShortW","100"],["SniperRifleW","20"],["ArmourUniformW","60"]],
 [["FacilityOil1","100"],["Diesel","50"],["Petrol","50"],['WaterMine-crated', 50],['DepthChargeAmmo-crated', 50]]];
-pyramidDefs.lh2 = [[["SoldierSupplies","100"],["Cloth","100"],["WaterBucket","500"],["MetalBeamMaterials","300"],["WorkWrench","20"]],[["Radio","30"],["Binoculars","30"],["GasMask","50"],["GasMaskFilter","100"]],[["HEGrenade","200"],["RpgW","80"],["RpgAmmo","500"],["SatchelChargeW","150"],["ExplosiveTripod","50"],["SatchelChargeT","50"],["AmmoUniformW","150"]],[["RifleW,RifleLightW,RifleAutomaticW","400"],["RifleAmmo","600"],["SMGW,SMGHeavyW","200"],["SMGAmmo","400"],["StickyBomb","200"]]];
+pyramidDefs.lh2 = [[["SoldierSupplies","400"],["Cloth","3000"],["WaterBucket","500"],["MetalBeamMaterials","300"],["WorkWrench","20"]],[["Radio","30"],["Binoculars","30"],["GasMask","50"],["GasMaskFilter","100"]],[["HEGrenade","200"],["RpgW","80"],["RpgAmmo","500"],["SatchelChargeW","150"],["ExplosiveTripod","50"],["SatchelChargeT","50"],["AmmoUniformW","150"]],[["RifleW,RifleLightW,RifleAutomaticW","400"],["RifleAmmo","600"],["SMGW,SMGHeavyW","200"],["SMGAmmo","400"],["StickyBomb","200"]]];
 pyramidDefs.lh3 = [[["SoldierSupplies","2000"],["Cloth","10000"],["MetalBeamMaterials","500"],["WaterBucket","1000"]],
 [["RifleW,RifleLightW","600"],["RifleLongW","100"],["RifleAmmo","1500"],["SMGW","200"],["SMGAmmo","500"]],
 [["Bandages","1000"],["FirstAidKit","100"],["BloodPlasma","500"],["TraumaKit","100"],["MedicUniformW","150"],["SnowUniformW","150"]],
 [["StickyBomb,ATGrenadeW","300"], ["GrenadeW","200"],["GreenAsh","150"],["SmokeGrenade","80"]],
 [["HEGrenade","300"],["RpgW","150"],["RpgAmmo","800"],["SatchelChargeW","250"],["ExplosiveTripod","100"],["SatchelChargeT","100"],["AmmoUniformW","200"]],
 [["Radio","200"],["Binoculars","100"],["WorkWrench","100"],["GasMask","200"],["GasMaskFilter","400"],["ListeningKit","15"],["Tripod","30"],["RadioBackpack","30"]],
-[["Shovel","50"],["EngineerUniformW","100"]],
-[["ATRPGW","30"],["ATRPGIndirectAmmo","150"],["MGAmmo","150"]],
-[["MiniTankAmmo","100"],["LightTankAmmo","100"],["ATAmmo","100"],["TankUniformW","150"]],
+[["Shovel","50"],["EngineerUniformW","60"]],
+[["ATRPGW","30"],["ATRPGIndirectAmmo","150"],["MGAmmo","100"]],
 [["FacilityOil1","50"],["Diesel","50"],["Petrol","50"],['WaterMine-crated', 50]]];
 pyramidDefs.test2 = [];
 

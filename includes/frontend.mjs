@@ -40,35 +40,16 @@ export async function init(resources, icon_model_url, quantity_model_url) {
     outputTotals();
   });
   // Add stockpile
-  document.querySelector('.add-pyramid').addEventListener('click', () => {
-    stockpiles = [];
-    imagesProcessed = 0;
-    imagesTotal = 0;
-    document.querySelector('.render').innerHTML = '';
-    addPyramid();
-  });
-  document.getElementById("crated").addEventListener('change', () => {
-    outputTotals();
-  });
-  // 82DK Stockpile tracking
-  // document.querySelector('.copy-stockpile').addEventListener('click', () => {
-  //   const stockpile = stockpiles[0];
-  //   let text = '';
-  //   console.log('stockpile', stockpile)
-  //   copyDefs.forEach(function([SheetName, CodeName]) {
-  //     const details = res.CATALOG.find(e => e.CodeName == CodeName);
-  //     if(!details){
-  //       text += "x\n";
-  //       console.warn('No details found for', SheetName, CodeName);
-  //       return;
-  //     }
-  //     const inventory = stockpile.contents.find(e => e.CodeName == CodeName && e.isCrated === true);
-  //     //console.log(CodeName, inventory);
-  //     const amountStored = inventory ? inventory.quantity : 0;
-  //     text += amountStored + "\n";
-  //   });
-  //   copyTextToClipboard(text.trim());
-  // })
+  // document.querySelector('.add-pyramid').addEventListener('click', () => {
+  //   stockpiles = [];
+  //   imagesProcessed = 0;
+  //   imagesTotal = 0;
+  //   document.querySelector('.render').innerHTML = '';
+  //   addPyramid();
+  // });
+  // document.getElementById("crated").addEventListener('change', () => {
+  //   outputTotals();
+  // });
 
   document.querySelector('select[name=format]').addEventListener('change', () => {
     outputTotals();
@@ -453,106 +434,106 @@ function getProcessImage(label, lastModified) {
   }
 }
 
-function addPyramid() {
-  const addpyramid = document.querySelector('div#addpyramid');
-  addpyramid.innerHTML = '';
-  console.log(res.CATALOG);
-  const addRowButton = document.createElement('button');
-  addRowButton.classList.add('addrow');
-  addRowButton.textContent = 'Add row'
-  addRowButton.addEventListener('click', () => {
-    pyramidDefs.test2.push([]);
-    outputTotals();
-  });
+// function addPyramid() {
+//   const addpyramid = document.querySelector('div#addpyramid');
+//   addpyramid.innerHTML = '';
+//   console.log(res.CATALOG);
+//   const addRowButton = document.createElement('button');
+//   addRowButton.classList.add('addrow');
+//   addRowButton.textContent = 'Add row'
+//   addRowButton.addEventListener('click', () => {
+//     pyramidDefs.test2.push([]);
+//     outputTotals();
+//   });
 
-  var copyPyramid = document.getElementById("copy-pyramid");
-  copyPyramid.addEventListener('click', () => {
-    navigator.clipboard.writeText(JSON.stringify(pyramidDefs.test2));
-  });
+//   var copyPyramid = document.getElementById("copy-pyramid");
+//   copyPyramid.addEventListener('click', () => {
+//     navigator.clipboard.writeText(JSON.stringify(pyramidDefs.test2));
+//   });
 
-  const selFaction = 'Wardens'
-  const categories = ['SmallArms', 'HeavyArms', 'HeavyAmmo', 'Utility', 'Medical', 'Supplies', 'Uniforms'];
-  categories.forEach((selcategory) => {
-    const colDiv = document.createElement('div');
-    colDiv.classList.add('col'); //change later
-    colDiv.setAttribute("id", selcategory);
-    colDiv.style.display = "none";
-    const categoryButton = document.createElement('button');
-    categoryButton.classList.add(selcategory);
-    categoryButton.classList.add('categBut');
-    categoryButton.innerHTML = selcategory;
-    categoryButton.addEventListener('click', () => {
-      if (document.getElementById(selcategory).style.display !== "none") {
-        // document.querySelector(`div.${selcategory}`).display = "none";
-        console.log(colDiv.display, colDiv);
-        colDiv.style.display = "none";
-      } else {
-        // document.querySelector(`div.${selcategory}`).display = "inline-block";
-        console.log(colDiv.style.display);
-        colDiv.style.display = "flex";
-      }
-    });
-    addpyramid.appendChild(categoryButton);
-    for (const catalogItem of res.CATALOG) {
-      const itemCategory = (catalogItem.ItemCategory || '').replace(/^EItemCategory::/, '');
-      const vehicleCategory = catalogItem.VehicleProfileType ? 'Vehicles' : undefined;
-      const structureCategory = catalogItem.BuildLocationType
-          || (catalogItem.ProfileType == 'EStructureProfileType::Shippable') ? 'Structures' : undefined;
+//   const selFaction = 'Wardens'
+//   const categories = ['SmallArms', 'HeavyArms', 'HeavyAmmo', 'Utility', 'Medical', 'Supplies', 'Uniforms'];
+//   categories.forEach((selcategory) => {
+//     const colDiv = document.createElement('div');
+//     colDiv.classList.add('col'); //change later
+//     colDiv.setAttribute("id", selcategory);
+//     colDiv.style.display = "none";
+//     const categoryButton = document.createElement('button');
+//     categoryButton.classList.add(selcategory);
+//     categoryButton.classList.add('categBut');
+//     categoryButton.innerHTML = selcategory;
+//     categoryButton.addEventListener('click', () => {
+//       if (document.getElementById(selcategory).style.display !== "none") {
+//         // document.querySelector(`div.${selcategory}`).display = "none";
+//         console.log(colDiv.display, colDiv);
+//         colDiv.style.display = "none";
+//       } else {
+//         // document.querySelector(`div.${selcategory}`).display = "inline-block";
+//         console.log(colDiv.style.display);
+//         colDiv.style.display = "flex";
+//       }
+//     });
+//     addpyramid.appendChild(categoryButton);
+//     for (const catalogItem of res.CATALOG) {
+//       const itemCategory = (catalogItem.ItemCategory || '').replace(/^EItemCategory::/, '');
+//       const vehicleCategory = catalogItem.VehicleProfileType ? 'Vehicles' : undefined;
+//       const structureCategory = catalogItem.BuildLocationType
+//           || (catalogItem.ProfileType == 'EStructureProfileType::Shippable') ? 'Structures' : undefined;
 
-      const itemFaction = (catalogItem.FactionVariant || '').replace(/^EFactionId::/, '');
-      const itemName = catalogItem.DisplayName;
+//       const itemFaction = (catalogItem.FactionVariant || '').replace(/^EFactionId::/, '');
+//       const itemName = catalogItem.DisplayName;
   
-      const category = itemCategory || vehicleCategory || structureCategory;
-      if (category == selcategory && (itemFaction == selFaction || itemFaction =='')) {
-        const itemDiv = document.createElement('div');
-        itemDiv.addEventListener("click", function(){
-          // pyramidDefs[0].push([catalogItem.CodeName, "100"])
-          console.log(catalogItem);
-          const activeRow = document.querySelector(".active");
-          if (activeRow){
-            // console.log(activeRow, activeRow.dataset);
-            pyramidDefs.test2[activeRow.dataset.rowindex].push([catalogItem.CodeName, "100"]);
-          } else {
-            pyramidDefs.test2[pyramidDefs.test2.length-1].push([catalogItem.CodeName, "100"]);
-          }
-          outputTotals();
-        });
-        itemDiv.classList.add('item');
-        // console.log(category)
-        itemDiv.classList.add(category);
-        const itemTooltip = document.createElement('span');
-        itemTooltip.innerHTML = itemName;
-        itemTooltip.classList.add('itemtooltip');
-        itemDiv.appendChild(itemTooltip);
+//       const category = itemCategory || vehicleCategory || structureCategory;
+//       if (category == selcategory && (itemFaction == selFaction || itemFaction =='')) {
+//         const itemDiv = document.createElement('div');
+//         itemDiv.addEventListener("click", function(){
+//           // pyramidDefs[0].push([catalogItem.CodeName, "100"])
+//           console.log(catalogItem);
+//           const activeRow = document.querySelector(".active");
+//           if (activeRow){
+//             // console.log(activeRow, activeRow.dataset);
+//             pyramidDefs.test2[activeRow.dataset.rowindex].push([catalogItem.CodeName, "100"]);
+//           } else {
+//             pyramidDefs.test2[pyramidDefs.test2.length-1].push([catalogItem.CodeName, "100"]);
+//           }
+//           outputTotals();
+//         });
+//         itemDiv.classList.add('item');
+//         // console.log(category)
+//         itemDiv.classList.add(category);
+//         const itemTooltip = document.createElement('span');
+//         itemTooltip.innerHTML = itemName;
+//         itemTooltip.classList.add('itemtooltip');
+//         itemDiv.appendChild(itemTooltip);
   
-        const fallbackImg = document.createElement('img');
-        fallbackImg.src = `./foxhole/infantry-59/icons/${catalogItem.CodeName}.png`;
-        fallbackImg.width = 42;
-        fallbackImg.height = 42;
-        fallbackImg.alt = catalogItem.DisplayName;
-        itemDiv.appendChild(fallbackImg);
+//         const fallbackImg = document.createElement('img');
+//         fallbackImg.src = `./foxhole/infantry-59/icons/${catalogItem.CodeName}.png`;
+//         fallbackImg.width = 42;
+//         fallbackImg.height = 42;
+//         fallbackImg.alt = catalogItem.DisplayName;
+//         itemDiv.appendChild(fallbackImg);
   
-        const labelSpan = document.createElement('span');
-        labelSpan.textContent = "+";
-        itemDiv.appendChild(labelSpan);
+//         const labelSpan = document.createElement('span');
+//         labelSpan.textContent = "+";
+//         itemDiv.appendChild(labelSpan);
   
-        itemDiv.classList.add('full'); //test
+//         itemDiv.classList.add('full'); //test
         
-        colDiv.appendChild(itemDiv);
-      }
-    }
-    addpyramid.appendChild(colDiv);
-    addpyramid.appendChild(addRowButton);
-  });
-  // const selCategory = 'Uniforms'
-}
+//         colDiv.appendChild(itemDiv);
+//       }
+//     }
+//     addpyramid.appendChild(colDiv);
+//     addpyramid.appendChild(addRowButton);
+//   });
+//   // const selCategory = 'Uniforms'
+// }
 
 function outputTotals() {
   const totals = {};
   const categories = {};
   let countDiff = false;
 
-  if (stockpiles.length == 2){countDiff = true};
+  // if (stockpiles.length == 2){countDiff = true};
   // for (const stockpile of stockpiles) {
   for (const [i, stockpile] of stockpiles.entries()) {
     for (const element of stockpile.contents) {
@@ -626,31 +607,30 @@ function outputTotals() {
   }
   
   const pyramidDef = pyramidDefs[definition];
-  const cratesTrue = document.getElementById("crated");
-  if (cratesTrue.checked == true){
-    pyramidDef.forEach((row, index) =>{
-      row.forEach((item, index2) => {
-        const itemSet = [];
-        if (!item[0].includes("-crated")) {
-          pyramidDef[index][index2][0].split(',').forEach((item) => {
-            itemSet.push(item + "-crated");
-          })
-        } else {
-          itemSet.push(item[0]);
-        }
-        pyramidDef[index][index2][0] = itemSet.join();
-      });
-    });
-  } else {
-    pyramidDef.forEach((row, index) =>{
-      row.forEach((item, index2) => {
-        if (item[0].includes("-crated")) {
-          pyramidDef[index][index2][0] = pyramidDef[index][index2][0].replaceAll('-crated', '');
-          // console.log(pyramidDef[index][index2][0]);
-        }
-      })
-    })
-  }
+  // const cratesTrue = document.getElementById("crated");
+  // if (cratesTrue.checked == true){
+  //   pyramidDef.forEach((row, index) =>{
+  //     row.forEach((item, index2) => {
+  //       const itemSet = [];
+  //       if (!item[0].includes("-crated")) {
+  //         pyramidDef[index][index2][0].split(',').forEach((item) => {
+  //           itemSet.push(item + "-crated");
+  //         })
+  //       } else {
+  //         itemSet.push(item[0]);
+  //       }
+  //       pyramidDef[index][index2][0] = itemSet.join();
+  //     });
+  //   });
+  // } else {
+  //   pyramidDef.forEach((row, index) =>{
+  //     row.forEach((item, index2) => {
+  //       if (item[0].includes("-crated")) {
+  //         pyramidDef[index][index2][0] = pyramidDef[index][index2][0].replaceAll('-crated', '');
+  //       }
+  //     })
+  //   })
+  // }
   // if (cratesTrue.checked == true){
   //   if (!itemName.includes("-crated")) {
   //     const itemSet = [];
@@ -802,7 +782,7 @@ function outputTotals() {
       this.parentElement.classList.add('active');
       openedPanel = this.parentElement; 
     });
-    rowDiv.appendChild(selectButton);
+    // rowDiv.appendChild(selectButton);
     pyramid.appendChild(rowDiv);
   });
   // Pyramid  end
