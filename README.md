@@ -3,11 +3,6 @@ Forked from [Foxhole Inventory Report](https://github.com/GICodeWarrior/fir), wh
 
 This tool analyses screenshots from [Foxhole](https://www.foxholegame.com/about-foxhole) containing tooltips of the base you are looking to supply using the Logi Pyramid as a basis.
 
-1. Open the map and hover the the base you want to supply
-2. Take a screenshot
-3. Paste it into https://pyramid.82dk.net
-4. Profit
-
 ## Status
 Currently a bit of a hack around fir as a proof of concept but thanks to their solid image recognition, its fully functional and should even work with icon mods.
 
