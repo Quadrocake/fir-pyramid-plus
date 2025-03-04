@@ -30,12 +30,7 @@ pyramidDefs.frigmin = [
   [['Radio-crated', 25], ['Binoculars-crated', 10], ['WorkWrench-crated', 10], ['GasMask-crated', 10], ['GasMaskFilter-crated', 20], ['WaterBucket-crated', 20]],
   [['TankUniformW-crated', 10], ['EngineerUniformW-crated', 10], ['AmmoUniformW-crated', 5], ['OfficerUniformW-crated', 3]],
 ];
-pyramidDefs.bs = [
-  [['SoldierSupplies-crated', 80], ['Cloth-crated', 150]],
-  [['LightArtilleryAmmo-crated', 100], ['HeavyArtilleryAmmo-crated', 100], ['MiniTankAmmo-crated', 15]],
-  [['Radio-crated', 60], ['Binoculars-crated', 30], ['WorkWrench-crated', 20], ['GasMask-crated', 20], ['GasMaskFilter-crated', 30], ['WaterBucket-crated', 30]],
-  [['TankUniformW-crated', 30], ['EngineerUniformW-crated', 30], ['AmmoUniformW-crated', 20], ['OfficerUniformW-crated', 20]],
-];
+pyramidDefs.bs = [[["SoldierSupplies-crated","60"],["Cloth-crated",150],["MetalBeamMaterials","80"]],[["LightArtilleryAmmo-crated","20"],["HeavyArtilleryAmmo-crated",100],["MiniTankAmmo-crated",15],["MGAmmo","8"]],[["Radio-crated",60],["Binoculars-crated",30],["WorkWrench-crated",20],["GasMask-crated",20],["GasMaskFilter-crated",30],["WaterBucket-crated","30"]],[["TankUniformW-crated","20"],["EngineerUniformW-crated","15"],["AmmoUniformW-crated","10"],["OfficerUniformW-crated",20]]];
 pyramidDefs.bb = [
   [['SoldierSupplies', 300], ['Cloth', 3000]],
   [['RifleLightW,RifleW', 100], ['RifleAmmo', 200], ['RifleLongW', 40], ['SMGW', 60], ['SMGAmmo', 160]], //infantry
@@ -96,6 +91,27 @@ pyramidDefs.lh3 = [[["SoldierSupplies","2000"],["Cloth","10000"],["MetalBeamMate
 [["ATRPGW","30"],["ATRPGIndirectAmmo","150"],["MGAmmo","150"]],
 [["MiniTankAmmo","100"],["LightTankAmmo","100"],["ATAmmo","100"],["TankUniformW","150"]],
 [["FacilityOil1","50"],["Diesel","50"],["Petrol","50"],['WaterMine-crated', 50]]];
-pyramidDefs.test2 = [];
+pyramidDefs.bf = [[["SoldierSupplies-crated","100"],["Cloth-crated","100"],["FacilityOil1-crated","100"],["Diesel-crated","100"],["Petrol-crated","100"],["MetalBeamMaterials-crated","100"]],
+[["RifleW-crated","100"],["RifleLightW-crated","100"],["RifleLongW-crated","100"],["SMGW-crated","100"],["MGW-crated","100"]],
+[["RifleAmmo-crated","100"],["SMGAmmo-crated","100"],["AssaultRifleAmmo-crated","100"],["MGAmmo-crated","100"],["ATRifleAmmo-crated","100"]],
+[["HEGrenade-crated","100"],["StickyBomb-crated","100"],["GrenadeW-crated","100"],["GreenAsh-crated","100"],["SmokeGrenade-crated","100"],["ATLaunchedGrenadeW-crated","100"]],
+[["RpgW-crated","100"],["ATRPGW-crated","100"],["ATRPGTW-crated","100"],["MGTW-crated","100"],["RPGTW-crated","100"]],
+[["RpgAmmo-crated","100"],["ATRPGIndirectAmmo-crated","100"],["MortarAmmo-crated","100"],["MortarAmmoFL-crated","100"],["MortarAmmoFlame-crated","100"]],
+[["LightArtilleryAmmo-crated","100"],["LRArtilleryAmmo-crated","100"],["MortarTankAmmo-crated","100"],["FlameAmmo-crated","100"],["DepthChargeAmmo-crated","100"],["WaterMine-crated","100"]],
+[["Bandages-crated","100"],["BloodPlasma-crated","100"],["FirstAidKit-crated","100"],["TraumaKit-crated","100"]],
+[["Radio-crated","100"],["Binoculars-crated","100"],["WorkWrench-crated","100"],["GasMask-crated","100"],["GasMaskFilter-crated","100"],["RadioBackpack-crated","100"]],
+[["WaterBucket-crated","100"],["Shovel-crated","100"],["BarbedWireMaterials-crated","100"],["SandbagMaterials-crated","100"],["Tripod-crated","100"],["ListeningKit-crated","100"]],
+[["SatchelChargeW-crated","100"],["ExplosiveTripod-crated","100"],["SatchelChargeT-crated","100"],["TankMine-crated","100"],["InfantryMine-crated","100"]],
+[["MedicUniformW-crated","100"],["TankUniformW-crated","100"],["AmmoUniformW-crated","100"],["EngineerUniformW-crated","100"],["SnowUniformW-crated","100"],["ScoutUniformW-crated","100"]],
+[["TruckW","100"],["Barge","100"],["Construction","100"],["ConstructionUtility","100"],["Crane","100"],["FlatbedTruck","100"]],
+[["MediumTank2W","100"],["MediumTank2RangeW","100"],["MediumTankW","100"],["MediumTankSiegeW","100"],["DestroyerTankW","100"],["DestroyerTankFlameW","100"]],
+[["EmplacedInfantryW","100"],["EmplacedATW","100"],["EmplacedLightArtilleryW","100"],["EmplacedHeavyArtilleryW","100"],["LiquidContainer","100"],["MaterialPlatform","100"]]];
+pyramidDefs.bf2 = [[["SoldierSupplies-crated","500"],["Cloth-crated","500"],["FacilityOil1-crated","100"],["Diesel-crated","200"],["Petrol-crated","200"],["MetalBeamMaterials-crated","200"]],[["RifleW-crated","100"],["RifleLightW-crated","100"],["RifleLongW-crated","40"],["SMGW-crated","100"],["MGW-crated","50"]],[["RifleAmmo-crated","150"],["SMGAmmo-crated","100"],["AssaultRifleAmmo-crated","60"],["MGAmmo-crated","60"],["ATRifleAmmo-crated","60"]],[["HEGrenade-crated","100"],["StickyBomb-crated","100"],["GrenadeW-crated","50"],["GreenAsh-crated","200"],["SmokeGrenade-crated","40"],["ATLaunchedGrenadeW-crated","40"]],[["RpgW-crated","100"],["ATRPGW-crated","40"],["ATRPGTW-crated","40"],["MGTW-crated","40"],["RPGTW-crated","20"]],[["RpgAmmo-crated","100"],["ATRPGIndirectAmmo-crated","40"],["MortarAmmo-crated","100"],["MortarAmmoFL-crated","20"],["MortarAmmoFlame-crated","60"]],[["LightArtilleryAmmo-crated","400"],["LRArtilleryAmmo-crated","400"],["MortarTankAmmo-crated","100"],["FlameAmmo-crated","40"],["DepthChargeAmmo-crated","40"],["WaterMine-crated","100"]],[["Bandages-crated","100"],["BloodPlasma-crated","60"],["FirstAidKit-crated","60"],["TraumaKit-crated","60"]],[["Radio-crated","100"],["Binoculars-crated","100"],["WorkWrench-crated","100"],["GasMask-crated","100"],["GasMaskFilter-crated","100"],["RadioBackpack-crated","40"]],[["WaterBucket-crated","40"],["Shovel-crated","50"],["BarbedWireMaterials-crated","100"],["SandbagMaterials-crated","100"],["Tripod-crated","100"],["ListeningKit-crated","20"]],[["SatchelChargeW-crated","100"],["ExplosiveTripod-crated","100"],["SatchelChargeT-crated","100"],["TankMine-crated","20"],["InfantryMine-crated","10"]],[["MedicUniformW-crated","40"],["TankUniformW-crated","40"],["AmmoUniformW-crated","40"],["EngineerUniformW-crated","20"],["SnowUniformW-crated","40"],["ScoutUniformW-crated","20"]],[["TruckW","50"],["Construction","20"],["ConstructionUtility","10"],["Crane","20"],["FlatbedTruck","40"],["TruckLiquidW","10"]],[["MediumTank2W","20"],["MediumTank2RangeW","20"],["MediumTankW","20"],["MediumTankSiegeW","30"],["DestroyerTankW","20"],["DestroyerTankFlameW","5"]],[["EmplacedInfantryW","15"],["EmplacedATW","15"],["EmplacedLightArtilleryW","6"],["EmplacedHeavyArtilleryW","6"],["LiquidContainer","10"],["MaterialPlatform","20"]]];
+pyramidDefs.test2 = [
+  [['SoldierSupplies-crated', 80], ['Cloth-crated', 150]],
+  [['LightArtilleryAmmo-crated', 100], ['HeavyArtilleryAmmo-crated', 100], ['MiniTankAmmo-crated', 15]],
+  [['Radio-crated', 60], ['Binoculars-crated', 30], ['WorkWrench-crated', 20], ['GasMask-crated', 20], ['GasMaskFilter-crated', 30], ['WaterBucket-crated', 30]],
+  [['TankUniformW-crated', 30], ['EngineerUniformW-crated', 30], ['AmmoUniformW-crated', 20], ['OfficerUniformW-crated', 20]],
+];
 
 export default pyramidDefs;

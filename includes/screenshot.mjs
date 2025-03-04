@@ -93,6 +93,8 @@ function extractStockpile(canvas) {
     }
   }
 
+  // console.log(darkStripes);
+
   let boxes = [];
   for (let left of Object.keys(darkStripes)) {
     // parseInt since keys are strings
@@ -131,7 +133,7 @@ function extractStockpile(canvas) {
       darkStripes: stripesCount,
     });
   }
-  //console.log(JSON.parse(JSON.stringify(boxes)));
+  // console.log(JSON.parse(JSON.stringify(boxes)));
 
   if (!boxes.length) {
     return undefined;
@@ -157,7 +159,7 @@ function extractStockpile(canvas) {
       }
     }
   }
-  //console.log(JSON.parse(JSON.stringify(boxes)));
+  // console.log(JSON.parse(JSON.stringify(boxes)));
 
   boxes.sort((a, b) => (b.right - b.left + 1) * (b.bottom - b.top + 1) - (a.right - a.left + 1) * (a.bottom - a.top + 1));
 
@@ -185,7 +187,7 @@ function extractStockpile(canvas) {
 
   //check left and right sides are mostly dark
   boxes = boxes.filter(fitDarkSides.bind(null, width));
-  //console.log(JSON.parse(JSON.stringify(boxes)));
+  // console.log(JSON.parse(JSON.stringify(boxes)));
 
   // Prefer the box closest to the middle
   const middle = Math.round(width / 2);
@@ -256,10 +258,10 @@ function extractStockpile(canvas) {
 async function extractContents(canvas, iconModel, iconClassNames, quantityModel, quantityClassNames) {
   // These tune the cropping of inventory items
   const MIN_QUANTITY_WIDTH = 30;
-  const MAX_QUANTITY_WIDTH = 90;
+  const MAX_QUANTITY_WIDTH = 110;
 
   const MIN_QUANTITY_HEIGHT = 22;
-  const MAX_QUANTITY_HEIGHT = 70;
+  const MAX_QUANTITY_HEIGHT = 110;
 
   const MAX_GREY_CHROMA = 16;
   const MAX_GREY_LIGHTNESS_VARIANCE = 16;
@@ -281,6 +283,7 @@ async function extractContents(canvas, iconModel, iconClassNames, quantityModel,
     }
   }
   const QUANTITY_GREY_VALUE = Object.keys(greys).sort((a, b) => greys[b] - greys[a])[0];
+  console.log(QUANTITY_GREY_VALUE);
 
   const contents = [];
   const promises = [];
@@ -296,11 +299,12 @@ async function extractContents(canvas, iconModel, iconClassNames, quantityModel,
       if (isGrey(pixels[redIndex], pixels[redIndex+1], pixels[redIndex+2])) {
         ++greyCount;
       } else if ((greyCount >= MIN_QUANTITY_WIDTH) && (greyCount <= MAX_QUANTITY_WIDTH)) {
-        const quantityBox = {
+        const referenceBox = {
           x: col - greyCount,
           y: row,
           width: greyCount,
         };
+        let quantityBox = referenceBox;
         let quantityGap;
 
         if (!quantityBottom || !quantityBottomVerified) {
@@ -311,11 +315,18 @@ async function extractContents(canvas, iconModel, iconClassNames, quantityModel,
           quantityGap = quantityBox.x - (previous.x + previous.width);
         }
         quantityBox.height = quantityBottom - quantityBox.y + 1;
-        //console.log(quantityBox);
+        // console.log(quantityBox);
 
         if ((quantityBox.height >= MIN_QUANTITY_HEIGHT) && (quantityBox.height <= MAX_QUANTITY_HEIGHT)) {
           // Found an item quantity
           quantityBottomVerified = true;
+
+          quantityBox = {
+            x: quantityBox.x + 61,
+            y: quantityBox.y + 78,
+            width: quantityBox.width - 61,
+            height: quantityBox.height - 78,
+          };
 
           const element = {
             quantityBox,
@@ -331,19 +342,47 @@ async function extractContents(canvas, iconModel, iconClassNames, quantityModel,
             }
           }));
 
-          const iconWidth = quantityBox.height;
+          const iconWidth = referenceBox.height;
           const iconGap = Math.ceil((quantityGap - iconWidth) / 2);
           element.iconBox = {
-            x: quantityBox.x - iconGap - iconWidth,
-            y: quantityBox.y,
-            width: iconWidth,
-            height: iconWidth,
+            // x: quantityBox.x - iconGap - iconWidth,
+            // y: quantityBox.y,
+            // width: iconWidth,
+            // height: iconWidth,
+            x: referenceBox.x + 10,
+            y: referenceBox.y + 10,
+            width: iconWidth - 20,
+            height: iconWidth - 20,
           };
           element.iconBox.canvas = cropCanvas(canvas, element.iconBox);
 
-          promises.push(classifyIcon(element.iconBox.canvas, iconModel, iconClassNames).then( o => Object.assign(element, o) ));
+          //replace gray with black
+          const context = element.iconBox.canvas.getContext('2d');
+          var imageData = context.getImageData(0, 0, iconWidth, iconWidth);
+          for (var i=0;i<imageData.data.length;i+=4)
+            {
+                // is this pixel the old rgb?
+                if(imageData.data[i]<80 &&
+                  imageData.data[i+1]<80 &&
+                  imageData.data[i+2]<80
+                ){
+                    // change to your new rgb
+                    imageData.data[i]=0;
+                    imageData.data[i+1]=0;
+                    imageData.data[i+2]=0;
+                }
+            }
+            context.putImageData(imageData,0,0);
 
+          promises.push(classifyIcon(element.iconBox.canvas, iconModel, iconClassNames).then( o => Object.assign(element, o) ));
+          console.log(element);
           contents.push(element);
+          document.body.appendChild(element.iconBox.canvas);
+          // tf.image.resizeBilinear(tf.browser.fromPixels(element.iconBox.canvas), [32, 32]).print();
+          // const verbose = true;
+          // tf.image.resizeBilinear(tf.browser.fromPixels(element.iconBox.canvas), [32, 32]).print(verbose);
+          // tf.print();
+          // tf.browser.toPixels(tf.image.resizeBilinear(tf.browser.fromPixels(element.iconBox.canvas), [32, 32]), element.iconBox.canvas);
         }
 
         greyCount = 0;
@@ -352,7 +391,7 @@ async function extractContents(canvas, iconModel, iconClassNames, quantityModel,
       }
     }
 
-    //console.log(contents.length, quantityBottom);
+    // console.log(contents.length, quantityBottom);
     if (quantityBottom) {
       row = quantityBottom;
     }
@@ -360,6 +399,7 @@ async function extractContents(canvas, iconModel, iconClassNames, quantityModel,
 
   await Promise.all(promises);
 
+  console.log(contents);
   return contents;
 
   function findQtyBottom(pixels, row, col, width, height) {
@@ -531,6 +571,7 @@ async function classifyIcon(canvas, model, classNames) {
 
   const best = (await prediction.argMax(1).data())[0];
   const key = classNames[best];
+  // console.log(classNames);
 
   return {
     CodeName: key.replace(CRATED_REGEXP, ''),

@@ -471,7 +471,7 @@ function addPyramid() {
   });
 
   const selFaction = 'Wardens'
-  const categories = ['SmallArms', 'HeavyArms', 'HeavyAmmo', 'Utility', 'Medical', 'Supplies', 'Uniforms'];
+  const categories = ['SmallArms', 'HeavyArms', 'HeavyAmmo', 'Utility', 'Medical', 'Supplies', 'Uniforms', 'Vehicles', 'Structures'];
   categories.forEach((selcategory) => {
     const colDiv = document.createElement('div');
     colDiv.classList.add('col'); //change later
@@ -509,11 +509,16 @@ function addPyramid() {
           // pyramidDefs[0].push([catalogItem.CodeName, "100"])
           console.log(catalogItem);
           const activeRow = document.querySelector(".active");
+          const cratesTrue = document.getElementById("crated");
+          var newCodeName = catalogItem.CodeName;
+          if (cratesTrue.checked == true) {
+            newCodeName += "-crated";
+          } 
           if (activeRow){
             // console.log(activeRow, activeRow.dataset);
-            pyramidDefs.test2[activeRow.dataset.rowindex].push([catalogItem.CodeName, "100"]);
+            pyramidDefs.test2[activeRow.dataset.rowindex].push([newCodeName, "100"]);
           } else {
-            pyramidDefs.test2[pyramidDefs.test2.length-1].push([catalogItem.CodeName, "100"]);
+            pyramidDefs.test2[pyramidDefs.test2.length-1].push([newCodeName, "100"]);
           }
           outputTotals();
         });
@@ -626,31 +631,31 @@ function outputTotals() {
   }
   
   const pyramidDef = pyramidDefs[definition];
-  const cratesTrue = document.getElementById("crated");
-  if (cratesTrue.checked == true){
-    pyramidDef.forEach((row, index) =>{
-      row.forEach((item, index2) => {
-        const itemSet = [];
-        if (!item[0].includes("-crated")) {
-          pyramidDef[index][index2][0].split(',').forEach((item) => {
-            itemSet.push(item + "-crated");
-          })
-        } else {
-          itemSet.push(item[0]);
-        }
-        pyramidDef[index][index2][0] = itemSet.join();
-      });
-    });
-  } else {
-    pyramidDef.forEach((row, index) =>{
-      row.forEach((item, index2) => {
-        if (item[0].includes("-crated")) {
-          pyramidDef[index][index2][0] = pyramidDef[index][index2][0].replaceAll('-crated', '');
-          // console.log(pyramidDef[index][index2][0]);
-        }
-      })
-    })
-  }
+  // const cratesTrue = document.getElementById("crated");
+  // if (cratesTrue.checked == true){
+  //   pyramidDef.forEach((row, index) =>{
+  //     row.forEach((item, index2) => {
+  //       const itemSet = [];
+  //       if (!item[0].includes("-crated")) {
+  //         pyramidDef[index][index2][0].split(',').forEach((item) => {
+  //           itemSet.push(item + "-crated");
+  //         })
+  //       } else {
+  //         itemSet.push(item[0]);
+  //       }
+  //       pyramidDef[index][index2][0] = itemSet.join();
+  //     });
+  //   });
+  // } else {
+  //   pyramidDef.forEach((row, index) =>{
+  //     row.forEach((item, index2) => {
+  //       if (item[0].includes("-crated")) {
+  //         pyramidDef[index][index2][0] = pyramidDef[index][index2][0].replaceAll('-crated', '');
+  //         // console.log(pyramidDef[index][index2][0]);
+  //       }
+  //     })
+  //   })
+  // }
   // if (cratesTrue.checked == true){
   //   if (!itemName.includes("-crated")) {
   //     const itemSet = [];
@@ -699,7 +704,7 @@ function outputTotals() {
       for (const itemName of itemNames) {
         let item = totals[itemName];
         const catalogItem = res.CATALOG.find(e=>e.CodeName == itemName.replace('-crated', ''));
-        const crateAmount = catalogItem.ItemDynamicData.QuantityPerCrate
+        const crateAmount = Object.is(catalogItem.ItemDynamicData, undefined) ? 3 : catalogItem.ItemDynamicData.QuantityPerCrate;
 
         // Fallback item definition and image
         if(!item) {
@@ -717,7 +722,7 @@ function outputTotals() {
         desiredCrates = Math.ceil(desired / crateAmount);
         total += item.total;
         totalCrates += Math.floor(total / crateAmount)
-        itemDiv.classList.add(item.category);
+        // itemDiv.classList.add(item.category);
         itemDiv.title = itemDiv.title + `${item.name} or\n`
 
         // Icon Image

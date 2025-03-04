@@ -10,7 +10,8 @@
 
   <link rel="stylesheet" href="includes/main.css" />
 
-  <link rel="modulepreload" href="includes/frontend.mjs" />
+  <!-- <link rel="modulepreload" href="includes/frontend.mjs" /> -->
+  <link rel="modulepreload" href="includes/debug.js" />
   <link rel="modulepreload" href="includes/screenshot.mjs" />
   <link rel="modulepreload" href="includes/ocr.mjs" />
 
@@ -53,6 +54,7 @@
       <option value='lh'>LH</option>
       <option value='lh2'>LH min</option>
       <option value='lh3'>LH avg</option>
+      <option value='bf'>Bluefin</option>
       <option value='test2'>Copy</option>
     </select>
     <select name='format'>
@@ -296,6 +298,11 @@
     a:hover{text-decoration:none;}
     input[type=file]{padding:8px;margin:0 auto 12px auto;}
     input[type=file]:hover{background:#222;}
+
+    canvas {
+    width: 42px;
+    height: 42px;
+    }
 
     /* Parka */
     #pyramid div.item[title="Caoivish Parka"]::after{
