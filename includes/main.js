@@ -1,4 +1,5 @@
 import * as front from './frontend.mjs'
+// import * as front from './debug.js'
 
 const VALID_VERSIONS = new Set([
   'entrenched',
