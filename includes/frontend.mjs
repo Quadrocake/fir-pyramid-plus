@@ -531,7 +531,7 @@ function addPyramid() {
         itemDiv.appendChild(itemTooltip);
   
         const fallbackImg = document.createElement('img');
-        fallbackImg.src = `./foxhole/infantry-59/icons/${catalogItem.CodeName}.png`;
+        fallbackImg.src = `./foxhole/infantry-61/icons/${catalogItem.CodeName}.png`;
         fallbackImg.width = 42;
         fallbackImg.height = 42;
         fallbackImg.alt = catalogItem.DisplayName;
@@ -730,7 +730,7 @@ function outputTotals() {
           itemDiv.appendChild(item.collection[0].iconBox.canvas)
         } else {
           const fallbackImg = document.createElement('img');
-          fallbackImg.src = `./foxhole/infantry-59/icons/${item.CodeName}.png`;
+          fallbackImg.src = `./foxhole/infantry-61/icons/${item.CodeName}.png`;
           fallbackImg.width = 42;
           fallbackImg.height = 42;
           fallbackImg.alt = item.name;
